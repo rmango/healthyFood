@@ -23,7 +23,7 @@
     },
     "permissions": [
         "activeTab",
-        "contextMenus","declarativeContent", "storage"
+        "contextMenus","declarativeContent", "storage","tabs"
     ],
     "icons": {"128":"img/logo.png"}
 
