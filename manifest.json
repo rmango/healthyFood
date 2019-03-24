@@ -6,14 +6,14 @@
     "content_scripts": [
         {
             "matches": ["http://*/*"],
-            "js": ["content.js"],
+            "js": ["js/content.js"],
             "run_at": "document_end",
             "all_frames": false
         },
         {
             "matches": ["https://*/*"
             ],
-            "js": ["content.js"],
+            "js": ["js/content.js"],
             "run_at": "document_end",
             "all_frames": false
         }
@@ -23,6 +23,8 @@
     },
     "permissions": [
         "activeTab",
-        "contextMenus"
-    ]
+        "contextMenus","declarativeContent", "storage"
+    ],
+    "icons": {"128":"img/logo.png"}
+
 }
