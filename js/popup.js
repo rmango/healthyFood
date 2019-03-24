@@ -11,18 +11,13 @@ function openIndex() {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        chrome.tabs.executeScript(tabs[0].id, { file: "js/content.js" }, function (data) {
+            // Data is an array of values, in case it was executed in multiple tabs/frames
+            //set title
+            document.getElementById("title").textContent = data[0].substring(0,20);
+        });
+    });
     var y = document.getElementById("container");
     y.addEventListener("click", openIndex);
 });
-
-
-//
-chrome.runtime.onMessage.addListener(
-    function(request, sender, sendResponse) {
-      console.log(sender.tab ?
-                  "from a content script:" + sender.tab.url :
-                  "from the extension");
-      if (request.greeting == "hello")
-        sendResponse({farewell: "goodbye"});
-        return true;
-    });
