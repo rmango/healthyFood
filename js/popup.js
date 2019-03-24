@@ -1,9 +1,10 @@
 
 
+//if can't find good match, just go random
+var rand = Math.floor((Math.random() * recipes.length));
 
-console.log(recipes[0].title);
-document.getElementById("title").textContent = recipes[0].title;
-document.getElementById("img").setAttribute("src",recipes[2].img);
-document.getElementById("container").setAttribute("alt",recipes[2].link);
+document.getElementById("title").textContent = recipes[rand].title;
+document.getElementById("image").setAttribute("src",recipes[rand].img);
+document.getElementById("container").setAttribute("alt",recipes[rand].link);
 
 
