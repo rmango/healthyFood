@@ -31,14 +31,7 @@ function openIndex() {
 }
 
 
-function promiseAllFunc(domString) {
-
-    //read in jsons from theMealDB
-    const urls = [
-        'https://www.themealdb.com/api/json/v1/1/list.php?i=list',
-        'https://www.themealdb.com/api/json/v1/1/filter.php?c=Vegetarian'
-    ];
-
+function promiseAllFunc(urls) {
     var valToReturn = Promise.all(urls.map(url =>
         fetch(url)
             .then(checkStatus)
@@ -64,7 +57,13 @@ document.addEventListener('DOMContentLoaded', function () {
             //array of meals that have matching ingredients
             var mealMatches = [];
 
-            promiseAllFunc(domString) //reads in list of ingredients and list of vegetarian recipes
+            //read in jsons from theMealDB
+            const urls = [
+                'https://www.themealdb.com/api/json/v1/1/list.php?i=list',
+                'https://www.themealdb.com/api/json/v1/1/filter.php?c=Vegetarian'
+            ];
+
+            promiseAllFunc(urls) //reads in list of ingredients and list of vegetarian recipes
                 .then(allResponses => {
                     ingredients = allResponses[0];
                     vegRecipes = allResponses[1];
@@ -79,19 +78,21 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                     }
 
+                    var urlsToFetch = [];
                     //if there are ingredients on page
                     if (ingredToInclude.length > 0) {
                         console.log("ingredients were found!");
-                        
+
+
                         //compare recipe ingredients to ingredients found (if recipes exist). select recipe with highest num ingredients in common
                         for (var i = 0; i < vegRecipes.meals.length; i++) {
                             //console.log(vegRecipes.meals[i].strMeal);
 
                             var mealId = vegRecipes.meals[i].idMeal;
                             var urlToFetch = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
+                            urlsToFetch.push(urlToFetch);
 
-                            //https://dev.to/johnpaulada/synchronous-fetch-with-asyncawait
-                            const request = async () => {
+                            /*const request = async () => {
                                 const response = await fetch(urlToFetch);
                                 const meal = await response.json();
 
@@ -119,10 +120,10 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                             //call to request, getting individual meal json
                             request();
-                            console.log("completed request #", i);
+                            console.log("completed request #", i);*/
                         }
                         //get the meal (with matching ingredients) with the most matches
-                        console.log("test", mealMatches);
+                        //console.log("test", mealMatches);
                         //console.log("test", mealMatches.length);
                         //console.log("test", mealMatches[0].mealId);
 
@@ -153,7 +154,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         console.log("randomize it");
                     }
 
+                    return promiseAllFunc(urlsToFetch);
 
+                }).then(mealResponses => {
+                    console.log("mealResp:", mealResponses);
                 })
             console.log("work pls", mealMatches[0]);
 
