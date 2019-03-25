@@ -51,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
             document.getElementById("title").textContent = data[0].substring(0, 20);
             var domString = data[0];
 
-            var ingredients;
-            var vegRecipes;
+            var ingredients; //all possible ingredients
+            var vegRecipes; // all possible vegetarian recipes
             var ingredToInclude = [];
             //array of meals that have matching ingredients
             var mealMatches = [];
@@ -91,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             var mealId = vegRecipes.meals[i].idMeal;
                             var urlToFetch = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
                             urlsToFetch.push(urlToFetch);
+
 
                             /*const request = async () => {
                                 const response = await fetch(urlToFetch);
@@ -156,16 +157,45 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     return promiseAllFunc(urlsToFetch);
 
-                }).then(mealResponses => { //all of the meals that have ingredients that match
+                }).then(mealResponses => { //all vegetarian meals
                     console.log("mealResp:", mealResponses);
                     console.log(mealResponses[0]);
                     console.log(mealResponses[0].meals);
+                    console.log(ingredToInclude);
+                    for (var m = 0; m < mealResponses.length; m++) {
 
-                    document.getElementById("title").textContent = mealResponses[0].meals[0].strMeal;
+                        //goes through recipe to count number of matches 
+                        //TODO: remove duplicates, ignore case
+                        var ingredMatches = 0;//number of matching ingredients found
+                        var ingredNum = 1; //index of ingredient
+                        var nextIngred = eval("mealResponses[m].meals[0].strIngredient" + ingredNum);
+                        console.log("Ingredient1: ", nextIngred);
+
+                        while (nextIngred != null && nextIngred != "" && ingredNum < 20) {
+                            //console.log("Ingredient: ", nextIngred);
+                            //if the recipe has an ingredient that was found on the domString
+                            if (ingredToInclude.toString().includes(nextIngred)) {
+                                console.log("MATCH for " + mealResponses[m].meals[0].idMeal + ":", nextIngred);
+                                ingredMatches++;
+                            }
+                            ingredNum++;
+                            nextIngred = eval("mealResponses[m].meals[0].strIngredient" + ingredNum);
+                        }
+                        if (ingredMatches > 0) {
+                            //TODO check for duplicates
+                            mealMatches.push({ "meal": mealResponses[m].meals[0], "numMatches": 1 });
+                            // "mealName": mealResponses[0].meals[0].strMeal, "mealImg": mealResponses[0].meals[0].strMealThumb, "mealVid": mealResponses[0].meals[0].strYoutube, 
+
+                        }
+                    }
+
+                    console.log("mealMatches:", mealMatches);
+                    /*document.getElementById("title").textContent = mealResponses[0].meals[0].strMeal;
                     document.getElementById("image").setAttribute("src", mealResponses[0].meals[0].strMealThumb);
-
-                    
-
+                    document.getElementById("container").setAttribute("alt", mealResponses[0].meals[0].strYoutube);*/
+                    document.getElementById("title").textContent = mealMatches[0].meal.strMeal;
+                    document.getElementById("image").setAttribute("src", mealMatches[0].meal.strMealThumb);
+                    document.getElementById("container").setAttribute("alt", mealMatches[0].meal.strYoutube);
                 })
             console.log("work pls", mealMatches[0]);
 
@@ -182,6 +212,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         });
     });
-    //var y = document.getElementById("container");
-    //y.addEventListener("click", openIndex);
+    var y = document.getElementById("container");
+    y.addEventListener("click", y.getAttribute("alt"));
 });
