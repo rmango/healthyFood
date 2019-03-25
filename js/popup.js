@@ -53,20 +53,70 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     //if there are ingredients on page
                     if (ingredToInclude.length > 0) {
+
+                        //array of meals that have matching ingredients
+                        var mealMatches = [];
+
                         console.log("ingredients were found!");
                         //compare recipe ingredients to ingredients found (if recipes exist). select recipe with highest num ingredients in common
                         for (var i = 0; i < vegRecipes.meals.length; i++) {
-                            console.log(vegRecipes.meals[i].strMeal);
+                            //console.log(vegRecipes.meals[i].strMeal);
+
+
 
                             //fetch the ingredients for that meal
-                            fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772')
+                            var mealId = vegRecipes.meals[i].idMeal;
+                            var urlToFetch = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
+                            fetch(urlToFetch)
                                 .then(res => res.json())
                                 .then((out) => {
-                                    console.log("fetching ingredients for meal:", out);
+                                    var meal = out;
+                                    //console.log("fetching ingredients for meal:", out);
+
+                                    //goes through recipe to count number of matches 
+                                    //TODO: remove duplicates, ignore case
+                                    var ingredMatches = 0;//number of matching ingredients found
+                                    var ingredNum = 1; //index of ingredient
+                                    nextIngred = eval("meal.meals[0].strIngredient" + ingredNum);
+                                    while (nextIngred != null && nextIngred != "" && ingredNum < 20) {
+                                        //console.log("Ingredient: ", nextIngred);
+                                        //if the recipe has an ingredient that was found on the domString
+                                        if (ingredToInclude.toString().includes(nextIngred)) {
+                                            //console.log("MATCH for " + meal.meals[0].idMeal + ":", nextIngred);
+                                            ingredMatches++;
+                                        }
+                                        ingredNum++;
+                                        nextIngred = eval("meal.meals[0].strIngredient" + ingredNum);
+                                    }
+                                    if (ingredMatches > 0) {
+                                        mealMatches.push({ "mealId": mealId, "mealName": meal.meals[0].strMeal, "mealImg": meal.meals[0].strMealThumb, "mealVid": meal.meals[0].strYoutube, "numMatches": ingredNum });
+                                        //console.log("pushed: ", mealMatches[mealMatches.length - 1]);
+                                    }
                                 })
                                 .catch(err => { throw err });
-
                         }
+                        //get the meal (with matching ingredients) with the most matches
+                        console.log("test", mealMatches);
+                        console.log("test", mealMatches.length);
+                        //if (mealMatches.length > 0) {
+                            console.log("meal matches: ", mealMatches[0]);
+
+                            var theOne = mealMatches[0];
+                            /*var mostMatches = 0;
+                            for (var k = 0; k < mealMatches.length; k++) {
+                                if (mealMatches[k].numMatches > mostMatches) {
+                                    theOne = mealMatches[k];
+                                }
+                            }*/
+                            console.log("CHOSEN:", theOne);
+                            //put null check on chosen
+                            //set title
+                            document.getElementById("title").textContent = theOne.mealName;
+
+                        /*} else {
+                            //go random
+                            console.log("randomize itttt");
+                        }*/
 
                     } else {
                         //do random
