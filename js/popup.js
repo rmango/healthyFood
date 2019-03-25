@@ -156,8 +156,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     return promiseAllFunc(urlsToFetch);
 
-                }).then(mealResponses => {
+                }).then(mealResponses => { //all of the meals that have ingredients that match
                     console.log("mealResp:", mealResponses);
+                    console.log(mealResponses[0]);
+
                 })
             console.log("work pls", mealMatches[0]);
 
