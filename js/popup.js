@@ -46,10 +46,37 @@ document.addEventListener('DOMContentLoaded', function () {
                             .then(res => res.json())
                             .then((outr) => {
                                 var vegRecp = outr;
+                                console.log("vegRecp: ", outr);
 
-                                //compare recipe ingredients to ingredients found (if recipes exist)
-                                var recipesWithIngred = [];
-                                
+                                //compare recipe ingredients to ingredients found (if recipes exist). select recipe with highest num ingredients in common
+                                var recipeWithIngred;
+                                var highestNumIngred = 0;
+                                for (var j = 0; j < vegRecp.meals.length; j++) {
+                                    //lookup meal by id
+                                    var mealId = vegRecp.meals[0].idMeal;
+                                    console.log("mealid: ",mealId);
+                                    /*fetch('https://www.themealdb.com/api/json/v1/1/lookup.php?i=52772')
+                                        .then(res => res.json())
+                                        .then((outrecp) => {
+                                            var recp = outrecp;
+                                            var ingredName = recp.meals.strIngredient1;
+                                            var k = 1;
+                                            while(ingredName != null) {
+                                                for(var m = 0; m < ingredToInclude.length; m++) {
+                                                    //if(ingredToInclude[m].toLowerCase() == ingredName.toLowerCase()) {
+                                                        console.log("MATCH:",ingredName);
+                                                    //}
+                                                }
+
+                                                ingredName = null;
+                                                k++;
+                                            }
+
+
+
+                                        })
+                                        .catch(err => { throw err });*/
+                                }
 
 
                                 //if no recipes, go random
