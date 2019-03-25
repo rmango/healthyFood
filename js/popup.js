@@ -159,6 +159,12 @@ document.addEventListener('DOMContentLoaded', function () {
                 }).then(mealResponses => { //all of the meals that have ingredients that match
                     console.log("mealResp:", mealResponses);
                     console.log(mealResponses[0]);
+                    console.log(mealResponses[0].meals);
+
+                    document.getElementById("title").textContent = mealResponses[0].meals[0].strMeal;
+                    document.getElementById("image").setAttribute("src", mealResponses[0].meals[0].strMealThumb);
+
+                    
 
                 })
             console.log("work pls", mealMatches[0]);
