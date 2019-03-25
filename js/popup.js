@@ -62,9 +62,24 @@ document.addEventListener('DOMContentLoaded', function () {
                         for (var i = 0; i < vegRecipes.meals.length; i++) {
                             //console.log(vegRecipes.meals[i].strMeal);
 
+                            var mealId = vegRecipes.meals[i].idMeal;
+                            var urlToFetch = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
+
+                            //https://dev.to/johnpaulada/synchronous-fetch-with-asyncawait
+                            const request = async () => {
+                                const response = await fetch(urlToFetch);
+                                const json = await response.json();
+                                console.log(json);
+                                console.log("request working!");
+                            }
+                            
+                            request();
+
+                            
 
 
-                            //fetch the ingredients for that meal
+
+                            /*//fetch the ingredients for that meal
                             var mealId = vegRecipes.meals[i].idMeal;
                             var urlToFetch = 'https://www.themealdb.com/api/json/v1/1/lookup.php?i=' + mealId;
                             fetch(urlToFetch)
@@ -93,13 +108,12 @@ document.addEventListener('DOMContentLoaded', function () {
                                         //console.log("pushed: ", mealMatches[mealMatches.length - 1]);
                                     }
                                 })
-                                .catch(err => { throw err });
+                                .catch(err => { throw err });*/
                         }
                         //get the meal (with matching ingredients) with the most matches
-                        console.log("test", mealMatches);
-                        console.log("test", mealMatches.length);
-                        //if (mealMatches.length > 0) {
-                            console.log("meal matches: ", mealMatches[0]);
+                        //console.log("test", mealMatches.length);
+                        /*if (mealMatches.length > 0) {
+                            console.log("meal matches: ", mealMatches[0].mealId);
 
                             var theOne = mealMatches[0];
                             /*var mostMatches = 0;
@@ -107,13 +121,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                 if (mealMatches[k].numMatches > mostMatches) {
                                     theOne = mealMatches[k];
                                 }
-                            }*/
+                            }
                             console.log("CHOSEN:", theOne);
                             //put null check on chosen
                             //set title
                             document.getElementById("title").textContent = theOne.mealName;
 
-                        /*} else {
+                        } else {
                             //go random
                             console.log("randomize itttt");
                         }*/
