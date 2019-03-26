@@ -43,10 +43,17 @@ document.addEventListener('DOMContentLoaded', function () {
             //innerHTML of DOM, collected in content script
             var domString = data[0];
 
+
+            //to be used to find recipes
             var ingredients; //all possible ingredients
             var vegRecipes; // all possible vegetarian recipes
             var ingredToInclude = []; //ingredients found in DOMString
             var mealMatches = [];//array of meals that have matching ingredients
+
+            //final return
+            var titleStr = "Couldn't find a recipe";
+            var imgUrl = "img/sadFace.png";
+            var recpLink = "#";
 
             //read in jsons from theMealDB
             const urls = [
@@ -68,6 +75,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     var urlsToFetch = []; //urls of meals that have desired ingredients
+
                     //if there are ingredients on page
                     if (ingredToInclude.length > 0) {
                         console.log("ingredients were found!");
@@ -82,6 +90,8 @@ document.addEventListener('DOMContentLoaded', function () {
                     } else {
                         //do random
                         console.log("randomize it"); //TODO all null checks everywhere
+
+
                     }
 
                     //pass the jsons fetched from array of urls into next .then()
@@ -118,10 +128,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                     console.log("mealMatches:", mealMatches);
-                    document.getElementById("title").textContent = mealMatches[0].meal.strMeal;
-                    document.getElementById("image").setAttribute("src", mealMatches[0].meal.strMealThumb);
-                    document.getElementById("container").setAttribute("alt", mealMatches[0].meal.strYoutube);//TODO make link work
+                    if (mealMatches.length > 0) {
+                        titleStr = mealMatches[0].meal.strMeal;
+                        imgUrl = mealMatches[0].meal.strMealThumb;
+                        recpLink = mealMatches[0].meal.strYoutube;
+                    }
+
+                    document.getElementById("title").textContent = titleStr;
+                    document.getElementById("image").setAttribute("src", imgUrl);
+                    document.getElementById("container").setAttribute("alt", recpLink);
                 })
+
         });
     });
     var y = document.getElementById("container");
